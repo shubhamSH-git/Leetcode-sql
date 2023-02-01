@@ -5,7 +5,7 @@ Key thing is to return a NULL value in case of no second highest salary
 SELECT 
     MAX(salary) as SecondHighestSalary
 FROM Employee 
-WHERE salary!= (SELECT max(salary) FROM Employee);
+WHERE salary!= (SELECT max(salary) FROM Employee); # or use <
 
   Using LIMIT and OFFSET: 
 
