@@ -15,3 +15,15 @@ IFNULL(
    DISTINCT salary 
 FROM Employee 
 LIMIT 1 OFFSET 1),null) as secondHighestSalary;
+
+  Using ranks :
+
+SELECT 
+    max(salary) as secondhighestsalary
+FROM
+(SELECT 
+    salary, 
+    dense_rank() OVER(ORDER BY salary desc) as r
+FROM Employee
+) x
+WHERE x.r=2; 
