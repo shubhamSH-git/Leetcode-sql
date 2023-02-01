@@ -1,1 +1,17 @@
-Hello
+Key thing is to return a NULL value in case of no second highest salary 
+
+  Using max() function: Selecting max salary from the tables after removing the max salary.
+
+SELECT 
+    MAX(salary) as SecondHighestSalary
+FROM Employee 
+WHERE salary!= (SELECT max(salary) FROM Employee);
+
+  Using LIMIT and OFFSET: 
+
+SELECT 
+IFNULL(
+(SELECT
+   DISTINCT salary 
+FROM Employee 
+LIMIT 1 OFFSET 1),null) as secondHighestSalary;
