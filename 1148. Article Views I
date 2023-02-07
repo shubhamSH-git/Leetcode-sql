@@ -1,0 +1,17 @@
+
+#Using Distinct
+SELECT 
+    DISTINCT author_id as id
+FROM Views v
+WHERE author_id=viewer_id
+ORDER BY id ;
+
+
+
+#Using Group  BY
+SELECT 
+    author_id as id
+FROM Views v
+WHERE author_id=viewer_id
+GROUP BY author_id
+ORDER BY id;
