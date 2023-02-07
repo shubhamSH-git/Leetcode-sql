@@ -1,0 +1,8 @@
+#585. Investments in 2016
+
+SELECT 
+   ROUND(SUM(tiv_2016),2) as tiv_2016
+FROM Insurance 
+WHERE tiv_2015 NOT IN (SELECT tiv_2015 FROM Insurance GROUP BY tiv_2015 HAVING count(*)=1)
+and (lat,lon) IN (SELECT lat,lon FROM Insurance GROUP BY lat,lon HAVING count(*)=1);
+
