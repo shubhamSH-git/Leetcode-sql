@@ -1,0 +1,39 @@
+#Using rank function 
+
+SELECT 
+    d.name as Department,
+    x.Employee,
+    salary as Salary
+FROM 
+(
+SELECT 
+    departmentId,
+    name as Employee,
+    salary,
+    rank() OVER(PARTITION BY departmentId ORDER BY salary desc) as r
+FROM Employee 
+) x 
+LEFT JOIN Department d
+ON x.departmentId=d.id
+WHERE x.r=1
+ORDER BY department; 
+
+#Using subquery and group by 
+
+SELECT 
+    d.name as Department,
+    e.name as Employee, 
+    e.salary as Salary
+FROM Employee e 
+LEFT JOIN Department d 
+ON e.departmentid=d.id
+WHERE (e.departmentId,salary) IN 
+(
+SELECT 
+    departmentId,
+    max(salary) as sal
+FROM 
+Employee 
+GROUP BY departmentId
+)
+ORDER BY Department;
