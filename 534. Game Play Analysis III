@@ -1,0 +1,30 @@
+# Using Joins 
+
+SELECT 
+    a1.player_id,
+    a1.event_date,
+    SUM(a2.games_played) as games_played_so_far
+FROM Activity a1 
+LEFT JOIN Activity a2
+ON a1.player_id=a2.player_id and a1.event_date>=a2.event_date
+GROUP BY a1.player_id, a1.event_date
+ORDER BY a1.player_id, a1.event_date;
+
+Using window Function:
+SELECT 
+    player_id,
+    event_date,
+    SUM(games_played) OVER(PARTITION BY player_id ORDER BY event_date) as games_played_so_far
+FROM Activity;
+
+Using subquery
+
+# Using subquery
+
+SELECT 
+    a.player_id, 
+    a.event_date,
+    (SELECT sum(games_played) FROM Activity where player_id=a.player_id and event_date<=a.event_date)
+    as games_played_so_far
+FROM Activity a;
+
