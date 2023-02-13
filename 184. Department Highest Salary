@@ -1,4 +1,4 @@
-#Using rank function 
+#Using window function - Rank
 
 SELECT 
     d.name as Department,
