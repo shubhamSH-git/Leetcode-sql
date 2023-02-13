@@ -19,7 +19,7 @@ FROM Activity;
 
 Using subquery
 
-# Using subquery
+# Using subquery (slow)
 
 SELECT 
     a.player_id, 
