@@ -1,4 +1,4 @@
-Key thing is to return a NULL value in case of no second highest salary 
+Key requirement is to return a NULL value in case of no second highest salary 
 
   Using max() function: Selecting max salary from the tables after removing the max salary.
 
