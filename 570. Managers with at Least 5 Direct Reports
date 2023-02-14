@@ -7,3 +7,18 @@ INNER JOIN Employee e2
 ON e1.managerId=e2.id
 GROUP BY e2.name
 HAVING count(*)>4;
+
+
+Using temporary Table
+
+SELECT 
+    b.name
+FROM 
+(
+SELECT 
+    managerId
+FROM Employee
+GROUP BY managerId
+HAVING count(*)>4) a 
+INNER JOIN Employee b 
+ON a.managerId=b.id ;
