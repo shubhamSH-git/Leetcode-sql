@@ -1,0 +1,23 @@
+# Using CTE and joins 
+
+WITH cte AS (
+SELECT player_id, 
+       min(event_date) e_id
+FROM Activity 
+GROUP BY player_id) 
+
+SELECT 
+    ROUND(count(a.event_date)/ count(*),2) as fraction
+FROM 
+cte LEFT JOIN Activity a 
+ON cte.player_id= a.player_id and cte.e_id+1=a.event_date;
+
+#Using subquery 
+
+SELECT 
+    ROUND(COUNT(a2.event_date)/COUNT(*),2) as fraction
+FROM 
+Activity a1 LEFT JOIN Activity a2
+ON a1.player_id=a2.player_id and a1.event_date+1=a2.event_date 
+WHERE (a1.player_id,a1.event_date) IN ( SELECT player_id, MIN(event_date) FROM Activity GROUP BY player_id);
+
