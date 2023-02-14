@@ -1,0 +1,9 @@
+# GROUP BY and Join to output manager name
+
+SELECT 
+    e2.name
+FROM Employee e1
+INNER JOIN Employee e2
+ON e1.managerId=e2.id
+GROUP BY e2.name
+HAVING count(*)>4;
