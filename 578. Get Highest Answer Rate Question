@@ -1,0 +1,42 @@
+# Using CASE WHEN 
+
+SELECT 
+    survey_log
+FROM 
+(
+SELECT 
+    question_id as survey_log,
+    SUM(CASE WHEN action='answer' THEN 1 ELSE 0 END)/SUM(CASE WHEN action='show' THEN 1 ELSE 0 END) 
+    as rate
+FROM SurveyLog 
+GROUP BY question_id 
+ORDER BY rate desc,survey_log
+) x
+LIMIT 1 
+;
+
+# Using CTE 
+
+WITH CTE AS (
+    SELECT question_id,
+    SUM(CASE WHEN action="show" THEN 1 ELSE 0 END) as N,
+    SUM(CASE WHEN action="answer" THEN 1 ELSE 0 END) as N_ans
+    FROM SurveyLog
+    GROUP BY question_id
+) 
+
+SELECT 
+    question_id as survey_log
+FROM cte 
+ORDER BY N_ans/N DESC, question_id
+LIMIT 1;
+
+# Compact case when 
+
+SELECT  
+question_id as survey_log
+FROM SurveyLog
+GROUP BY question_id
+ORDER BY (count(answer_id) / count(case when action = 'show' then question_id ELSE null end )) desc, 1 asc
+LIMIT 1;
+
