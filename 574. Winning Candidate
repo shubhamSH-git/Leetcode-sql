@@ -1,0 +1,25 @@
+# using JOINS and LIMIT
+
+SELECT 
+    c.name
+FROM Vote v 
+INNER JOIN Candidate c 
+ON v.candidateId=c.id 
+GROUP BY c.name
+ORDER BY count(*) desc
+LIMIT 1;
+
+# USING window function 
+SELECT 
+    x.name 
+FROM 
+(
+SELECT 
+    c.name,
+    row_number() OVER(ORDER BY count(*) desc) as r
+FROM Vote v 
+INNER JOIN Candidate c 
+ON v.candidateId=c.id 
+GROUP BY c.name
+) x 
+WHERE x.r=1;
