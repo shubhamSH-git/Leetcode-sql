@@ -1,4 +1,4 @@
-# For case with one highest
+# For case with one highest - one can use cte for union part as well
 
 SELECT 
     user as id,
