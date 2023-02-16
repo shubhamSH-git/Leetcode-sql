@@ -1,0 +1,13 @@
+SELECT 
+    user as id,
+    count(*) as num
+FROM
+(SELECT 
+    requester_id as user
+FROM RequestAccepted
+UNION ALL
+SELECT 
+    accepter_id as user 
+FROM RequestAccepted) x 
+GROUP BY user
+ORDER BY count(*) DESC LIMIT 1;
