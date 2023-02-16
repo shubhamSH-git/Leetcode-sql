@@ -1,0 +1,20 @@
+# Using CTE
+
+WITH CTE AS (
+    SELECT 
+        t.id,
+        t.p_id,
+        x.id as xid
+    FROM 
+    Tree t
+    LEFT JOIN 
+    Tree x
+    ON t.id= x.p_id
+)
+
+
+SELECT 
+    id,
+    (CASE WHEN p_id is NULL THEN 'Root' WHEN xid is not NULL THEN 'Inner' ELSE 'Leaf' END ) as type
+FROM CTE
+GROUP BY id;
