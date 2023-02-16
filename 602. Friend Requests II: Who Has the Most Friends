@@ -1,3 +1,5 @@
+# For case with one highest
+
 SELECT 
     user as id,
     count(*) as num
@@ -11,3 +13,38 @@ SELECT
 FROM RequestAccepted) x 
 GROUP BY user
 ORDER BY count(*) DESC LIMIT 1;
+
+
+# Using Join (slow) - creates lot of rows 
+
+SELECT 
+    r1.requester_id as id,
+    count(distinct r1.accepter_id)+ count(distinct r2.requester_id) as num
+FROM RequestAccepted r1
+LEFT JOIN RequestAccepted r2 
+ON r1.requester_id=r2.accepter_id 
+GROUP BY r1.requester_id
+ORDER BY num desc LIMIT  1;
+
+# Getting multiple user which are have highest
+
+SELECT 
+    x.id, 
+    x.num
+FROM 
+(
+SELECT 
+    user as id,
+    count(*) as num,
+    rank() OVER(ORDER BY count(*) desc) as r
+FROM
+(SELECT 
+    requester_id as user
+FROM RequestAccepted
+UNION ALL
+SELECT 
+    accepter_id as user 
+FROM RequestAccepted) x 
+GROUP BY user) x 
+WHERE x.r=1;
+
