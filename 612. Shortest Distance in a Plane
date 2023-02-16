@@ -2,7 +2,16 @@
 
 SELECT 
 ROUND(POWER(POWER(p1.x-p2.x,2)+POWER(p1.y-p2.y,2),0.5),2) as shortest
-FROM Point2D p1 INNER JOIN Point2D p2 
+FROM Point2D p1 JOIN Point2D p2 
 WHERE p1.x!=p2.x OR p1.y!=p2.y
+ORDER BY shortest LIMIT 1
+;
+
+# using condition to remove double calculation 
+
+SELECT 
+ROUND(POWER(POWER(p1.x-p2.x,2)+POWER(p1.y-p2.y,2),0.5),2) as shortest
+FROM Point2D p1 INNER JOIN Point2D p2 
+ON p1.x<=p2.x and (p1.x!=p2.x OR p1.y!=p2.y)
 ORDER BY shortest LIMIT 1
 ;
