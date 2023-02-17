@@ -1,0 +1,9 @@
+# USING CASE 
+
+
+SELECT 
+    (CASE WHEN mod(id,2) =0 THEN id-1
+    WHEN s1.id+1 not in (SELECT id FROM Seat) THEN id  ELSE id+1 END) as id, 
+    student
+FROM Seat s1
+ORDER BY id;
