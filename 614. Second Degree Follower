@@ -1,3 +1,4 @@
+# 1
 SELECT 
     f.followee as follower,
     count(*) as num
@@ -5,3 +6,17 @@ FROM Follow f
 WHERE f.followee in (SELECT follower FROM Follow GROUP BY follower HAVING count(*)>=1)
 GROUP BY f.followee
 ORDER BY follower;
+
+# 2 
+
+SELECT 
+    x.followee as follower,
+    COUNT(DISTINCT x.follower) as num
+FROM 
+Follow x 
+INNER JOIN 
+Follow y 
+ON x.followee= y.follower
+GROUP BY x.followee 
+ORDER BY follower;
+
