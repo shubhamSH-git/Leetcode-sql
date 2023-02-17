@@ -7,3 +7,14 @@ SELECT
     student
 FROM Seat s1
 ORDER BY id;
+
+
+#Using Bit Manipulation
+
+SELECT
+    s1.id, COALESCE(s2.student, s1.student) AS student
+FROM Seat s1
+LEFT JOIN
+Seat s2 
+ON ((s1.id + 1) ^ 1) - 1 = s2.id
+ORDER BY s1.id;
