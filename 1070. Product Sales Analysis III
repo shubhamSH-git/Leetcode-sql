@@ -7,3 +7,22 @@ FROM Sales
 WHERE (product_id,year) IN (
     SELECT product_id, min(year) FROM Sales GROUP BY product_id
 );
+
+#Using window function 
+
+SELECT 
+    product_id,
+    first_year,
+    quantity,
+    price 
+FROM 
+(SELECT 
+    product_id,
+    year as first_year,
+    quantity,
+    price,
+    rank() OVER(PARTITION BY product_id ORDER BY year) as r 
+FROM Sales ) x
+WHERE x.r=1;
+
+
