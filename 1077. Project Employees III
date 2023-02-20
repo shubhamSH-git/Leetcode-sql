@@ -1,0 +1,34 @@
+#Using window function
+
+SELECT 
+    project_id, 
+    employee_id
+FROM 
+(SELECT
+    p.project_id, 
+    e.employee_id,
+    rank() OVER(PARTITION BY project_id ORDER BY experience_years desc) as r 
+FROM
+Project p 
+LEFT JOIN Employee e 
+ON p.employee_id=e.employee_id 
+) x
+WHERE x.r=1;
+
+# Using Subquery 
+
+SELECT 
+    p.project_id,
+    em.employee_id
+FROM Project p 
+LEFT JOIN Employee em 
+ON p.employee_id=em.employee_id
+WHERE (p.project_id, em.experience_years) IN 
+(
+SELECT
+    p.project_id,
+    max(em.experience_years) as exp
+FROM Project p 
+LEFT JOIN Employee em 
+ON p.employee_id=em.employee_id
+GROUP BY p.project_id) ;
