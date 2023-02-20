@@ -19,4 +19,17 @@ FROM Orders
 where dispatch_date BETWEEN '2018-06-23' and '2019-06-23') y
 ON x.book_id=y.book_id
 GROUP BY x.book_id 
-HAVING SUM(y.quantity)<10 or SUM(y.quantity) is  NULL;
+HAVING IFNULL(SUM(y.quantity),0)<10;
+
+#without 
+
+SELECT 
+    b.book_id,
+    b.name
+FROM Books b 
+LEFT JOIN Orders o 
+ON b.book_id=o.book_id 
+and o.dispatch_date BETWEEN '2018-06-23' and '2019-06-23'
+WHERE b.available_from <='2019-05-23'
+GROUP BY b.book_id 
+HAVING IFNULL(SUM(o.quantity),0) <10;
