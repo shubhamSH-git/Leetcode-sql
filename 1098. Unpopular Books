@@ -1,0 +1,22 @@
+
+SELECT 
+    x.book_id,
+    x.name
+FROM
+(SELECT 
+    book_id,
+    name, 
+    available_from 
+FROM Books 
+WHERE available_from<='2019-05-23') x
+LEFT JOIN 
+(SELECT 
+    order_id,
+    book_id,
+    quantity, 
+    dispatch_date 
+FROM Orders 
+where dispatch_date BETWEEN '2018-06-23' and '2019-06-23') y
+ON x.book_id=y.book_id
+GROUP BY x.book_id 
+HAVING SUM(y.quantity)<10 or SUM(y.quantity) is  NULL;
