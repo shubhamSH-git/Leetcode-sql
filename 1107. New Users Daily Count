@@ -1,0 +1,15 @@
+SELECT 
+    X.login_date,
+    COUNT(DISTINCT X.user_id) as user_count
+FROM 
+(
+SELECT 
+    t.user_id,
+    min(t.activity_date) as login_date
+FROM Traffic t
+WHERE t.activity='login' 
+GROUP BY 1
+) X
+WHERE X.login_date BETWEEN '2019-04-01' and '2019-06-30'
+GROUP BY 1
+;
