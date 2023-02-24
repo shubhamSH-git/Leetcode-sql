@@ -1,0 +1,13 @@
+# Using join
+
+SELECT 
+    business_id
+FROM Events e 
+LEFT JOIN (SELECT e1.event_type, AVG(e1.occurences) as ag
+FROM Events e1
+GROUP BY e1.event_type ) x 
+ON e.event_type=x.event_type
+WHERE e.occurences > x.ag
+GROUP BY e.business_id
+HAVING count(*)>1;
+
