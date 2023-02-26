@@ -1,0 +1,22 @@
+
+
+select 
+    round(avg(dly)*100,2) as average_daily_percent
+from
+(select 
+    x.action_date,
+    count(distinct x.flg)/count(distinct x.post_id) AS Dly
+from
+(
+SELECT 
+    action_date,
+    a.post_id,
+    (CASE WHEN  r.remove_date is not null THEN a.post_id END ) as flg 
+FROM Actions a 
+LEFT JOIN Removals r
+ON a.post_id=r.post_id 
+where a.extra='spam'
+) x
+group by x.action_date)
+y
+;
