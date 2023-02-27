@@ -1,0 +1,10 @@
+
+SELECT 
+    u.user_id as buyer_id, 
+    MIN(u.join_date) as join_date, 
+    SUM(CASE WHEN YEAR(order_date)=2019 THEN 1 ELSE 0 END) as orders_in_2019
+FROM Users u  
+LEFT JOIN 
+(SELECT * FROM Orders WHERE YEAR(order_date)=2019) x
+ON u.user_id=x.buyer_id
+GROUP BY u.user_id;
