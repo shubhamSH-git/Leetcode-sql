@@ -1,3 +1,5 @@
+#Using case when
+
 SELECT 
     LEFT(t.trans_date,7) as month ,
     t.country,
@@ -5,5 +7,17 @@ SELECT
     SUM(CASE WHEN state="approved" THEN 1 ELSE 0 END) as approved_count,
     SUM(amount) as trans_total_amount,
     SUM(CASE WHEN state="approved" THEN amount ELSE 0  END) as approved_total_amount
+FROM Transactions t 
+GROUP BY LEFT(t.trans_date,7),t.country;
+
+# Using IF 
+
+SELECT 
+    LEFT(t.trans_date,7) as month ,
+    t.country,
+    count(t.id) as trans_count,
+    SUM(IF(state="approved",1,0)) as approved_count,
+    SUM(amount) as trans_total_amount,
+    SUM(IF(state="approved",amount,0)) as approved_total_amount
 FROM Transactions t 
 GROUP BY LEFT(t.trans_date,7),t.country;
