@@ -1,0 +1,26 @@
+
+#Using cumulative sum 
+
+SELECT 
+    person_name
+FROM
+(
+SELECT 
+    person_name, 
+    sum(Weight) OVER(ORDER BY turn) as wt 
+FROM Queue
+) x
+WHERE x.wt<=1000
+ORDER BY wt DESC LIMIT 1
+;
+
+# Using join 
+
+SELECT q1.person_name
+FROM Queue q1 JOIN Queue q2 ON q1.turn >= q2.turn
+GROUP BY q1.turn
+HAVING SUM(q2.weight) <= 1000
+ORDER BY SUM(q2.weight) DESC
+LIMIT 1;
+
+
