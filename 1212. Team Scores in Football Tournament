@@ -1,0 +1,45 @@
+# There are teams with no matches played that are to be output as well. (Using LEFT JOIN teams table)
+
+
+#Using CTE and union
+WITH CTE AS 
+(SELECT 
+    match_id,
+    host_team,
+    guest_team,
+    IF(host_goals>guest_goals,3,IF(host_goals=guest_goals,1,0)) as g
+FROM Matches
+UNION 
+SELECT
+    match_id,
+    guest_team,
+    host_team,
+    IF(host_goals<guest_goals,3,IF(host_goals=guest_goals,1,0)) as g
+FROM Matches
+)
+
+SELECT 
+    t.team_id,
+    t.team_name,
+    IFNULL(SUM(g),0) as num_points
+FROM CTE 
+RIGHT JOIN Teams t
+ON CTE.host_team=t.team_id
+GROUP BY t.team_id
+ORDER BY num_points DESC,team_id;
+
+
+# Simple using LEFT JOIN 
+
+SELECT 
+    team_id,
+    team_name, 
+    IFNULL(SUM(CASE WHEN team_id=host_team THEN IF(host_goals>guest_goals,3,IF(host_goals=guest_goals,1,0))
+    ELSE IF(host_goals<guest_goals,3,IF(host_goals=guest_goals,1,0)) END),0) as num_points
+FROM Teams t 
+LEFT JOIN  Matches m
+ON t.team_id=m.host_team
+OR t.team_id=m.guest_team
+GROUP BY team_id
+ORDER BY num_points desc,team_id;
+
