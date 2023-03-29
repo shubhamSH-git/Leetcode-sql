@@ -1,0 +1,16 @@
+# using if 
+SELECT 
+    sale_date, 
+    SUM(IF(fruit='apples',sold_num,-sold_num)) as diff
+FROM Sales 
+GROUP BY sale_date 
+ORDER BY sale_date;
+
+# solution using cross join
+
+SELECT 
+    s1.sale_date, 
+    s1.sold_num-s2.sold_num as diff
+FROM Sales s1, Sales s2
+WHERE s1.fruit="apples" and s2.fruit="oranges" and s1.sale_date=s2.sale_date
+ORDER BY sale_date;
