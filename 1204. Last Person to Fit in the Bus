@@ -20,7 +20,22 @@ SELECT q1.person_name
 FROM Queue q1 JOIN Queue q2 ON q1.turn >= q2.turn
 GROUP BY q1.turn
 HAVING SUM(q2.weight) <= 1000
-ORDER BY SUM(q2.weight) DESC
+ORDER BY q1.turn DESC
 LIMIT 1;
 
+#using CTE  
+
+WITH CTE AS 
+(
+  SELECT 
+        person_name,
+        turn,
+        SUM(weight) OVER(ORDER BY turn) as wt
+  FROM Queue
+)
+
+SELECT 
+  person_name
+FROM Queue q 
+WHERE q.turn =(SELECT max(turn) FROM cte where cte.wt<=1000);
 
