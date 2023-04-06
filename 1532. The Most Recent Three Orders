@@ -1,0 +1,19 @@
+SELECT  
+    y.name as customer_name,
+    x.customer_id,
+    x.order_id,
+    x.order_date
+FROM 
+(
+SELECT 
+    o.customer_id,
+    o.order_id, 
+    o.order_date,
+    row_number() OVER(PARTITION BY o.customer_id ORDER BY o.order_date desc ) as r
+FROM Orders o 
+) x 
+LEFT JOIN 
+Customers y 
+ON x.customer_id=y.customer_id
+WHERE x.r<=3
+ORDER BY customer_name,customer_id,order_date desc;
