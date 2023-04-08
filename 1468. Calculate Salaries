@@ -1,0 +1,17 @@
+SELECT 
+    s1.company_id,
+    s1.employee_id,
+    s1.employee_name , 
+    ROUND(s1.salary-tax*s1.salary) as salary
+FROM
+Salaries s1
+LEFT JOIN  
+(
+SELECT
+    company_id,
+    CASE WHEN MAX(salary) <1000 THEN 0 WHEN MAX(salary)>10000 THEN 0.49 ELSE 0.24 END 
+    AS tax
+FROM Salaries s
+GROUP BY s.company_id
+) s2 
+ON s1.company_id=s2.company_id;
