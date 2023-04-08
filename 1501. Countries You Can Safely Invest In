@@ -1,0 +1,17 @@
+WITH CTE AS(
+    SELECT 
+        c.name as country,
+        AVG(c1.duration) as duration
+    FROM Calls c1 
+    INNER JOIN Person p
+    ON p.id=c1.caller_id or p.id=c1.callee_id
+    INNER JOIN Country c
+    ON LEFT(p.phone_number,3)=c.country_code
+    GROUP BY c.name
+)
+
+SELECT
+    country
+FROM cte 
+WHERE cte.duration > (SELECT AVG(duration) FROM calls )
+;
