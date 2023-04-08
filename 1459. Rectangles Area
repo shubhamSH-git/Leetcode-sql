@@ -1,0 +1,9 @@
+SELECT 
+    p1.id as P1,
+    p2.id as P2,
+    abs(p1.x_value-p2.x_value)*abs(p1.y_value-p2.y_value) as area
+FROM
+Points p1 
+INNER JOIN Points p2 
+ON p1.id<p2.id and abs(p1.x_value-p2.x_value)*abs(p1.y_value-p2.y_value)>0 
+ORDER BY area desc, p1.id,p2.id;
