@@ -1,3 +1,5 @@
+# Simple solution using joins for finding 5 consecutive day login account
+
 SELECT 
     a.* 
 FROM Accounts a 
@@ -16,3 +18,19 @@ ON l1.id=l5.id and l1.login_date=DATE_ADD(l5.login_date,INTERVAL 4 DAY)
 )
 ORDER BY a.id
 ;
+
+# General solution for finding N consecutive days login accounts
+
+SELECT 
+    a.*
+FROM Accounts a 
+WHERE a.id IN
+(
+ SELECT l1.id
+FROM Logins l1 
+INNER JOIN Logins l2 
+ON l1.id=l2.id and DATEDIFF(l2.login_date,l1.login_date) BETWEEN 1 AND 4
+GROUP BY l1.id,l1.login_date
+HAVING COUNT(DISTINCT l2.login_date)=4
+)
+ORDER BY a.id;
