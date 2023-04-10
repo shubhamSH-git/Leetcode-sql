@@ -1,0 +1,18 @@
+SELECT 
+    a.* 
+FROM Accounts a 
+WHERE a.id IN
+(
+    SELECT  DISTINCT l1.id
+FROM  Logins l1 
+INNER JOIN Logins l2
+ON l1.id=l2.id and l1.login_date=DATE_ADD(l2.login_date,INTERVAL 1 DAY)
+INNER JOIN Logins l3
+ON l1.id=l3.id and l1.login_date=DATE_ADD(l3.login_date,INTERVAL 2 DAY)
+INNER JOIN Logins l4
+ON l1.id=l4.id and l1.login_date=DATE_ADD(l4.login_date,INTERVAL 3 DAY)
+INNER JOIN Logins l5
+ON l1.id=l5.id and l1.login_date=DATE_ADD(l5.login_date,INTERVAL 4 DAY)
+)
+ORDER BY a.id
+;
