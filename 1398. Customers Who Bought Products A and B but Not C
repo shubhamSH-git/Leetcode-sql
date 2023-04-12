@@ -15,3 +15,16 @@ Customers c
 ON x.customer_id=c.customer_id
 WHERE x.A>0 and x.B>0 and x.C=0
 ORDER by customer_id;
+
+#Using joins and faster 
+
+SELECT 
+    DISTINCT c.*
+FROM Customers c 
+LEFT JOIN Orders o 
+ON c.customer_id=o.customer_id and o.product_name="A"
+LEFT JOIN Orders o1 
+ON o.customer_id=o1.customer_id and o1.product_name="B"
+LEFT JOIN Orders o2 
+ON o1.customer_id=o2.customer_id and o2.product_name="C"
+WHERE o.product_name="A" and o1.product_name="B" and o2.product_name is NULL;
