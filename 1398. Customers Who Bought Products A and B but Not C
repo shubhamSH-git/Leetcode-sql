@@ -1,0 +1,17 @@
+SELECT 
+    c.*
+FROM 
+(
+SELECT 
+    o.customer_id,
+    SUM(CASE WHEN o.product_name="A" THEN 1 ELSE 0 END) as A,
+    SUM(CASE WHEN o.product_name="B" THEN 1 ELSE 0 END) as B,
+    SUM(IF(o.product_name="C",1,0)) as C 
+FROM Orders o 
+GROUP BY o.customer_id
+) x 
+LEFT JOIN 
+Customers c 
+ON x.customer_id=c.customer_id
+WHERE x.A>0 and x.B>0 and x.C=0
+ORDER by customer_id;
