@@ -1,0 +1,23 @@
+SELECT 
+    inv.invoice_id,
+    x.customer_name,
+    inv.price,
+    x.contacts_cnt,
+    x.trusted_contacts_cnt
+FROM Invoices inv 
+LEFT JOIN 
+(
+SELECT 
+    c1.customer_id,
+    c1.customer_name,
+    count(c2.contact_name) as contacts_cnt,
+    count(c3.email) as trusted_contacts_cnt
+FROM Customers c1
+LEFT JOIN Contacts c2 
+ON c1.customer_id=c2.user_id 
+LEFT JOIN Customers c3 
+ON c2.contact_email=c3.email
+GROUP BY c1.customer_id
+) X
+ON inv.user_id=X.customer_id
+ORDER BY inv.invoice_id;
