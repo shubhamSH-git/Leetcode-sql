@@ -1,0 +1,16 @@
+WITH CTE AS 
+(
+SELECT 
+    a.name,
+    count(f.id) as cnt
+FROM Activities a 
+LEFT JOIN Friends f
+ON a.name=f.activity
+GROUP BY a.name
+)
+
+SELECT 
+    cte.name as activity
+FROM CTE 
+WHERE cte.cnt!= (SELECT max(cnt) FROM cte)
+AND cte.cnt!=(SELECT min(cnt) FROM cte);
