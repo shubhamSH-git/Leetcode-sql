@@ -1,0 +1,19 @@
+WITH CTE AS 
+(
+    SELECT 
+        visited_on, 
+        SUM(amount) as amt
+    FROM Customer 
+    GROUP BY visited_on
+)
+
+SELECT 
+    c1.visited_on, 
+    SUM(c2.amt) as amount,
+    ROUND(AVG(c2.amt),2) as average_amount
+FROM CTE c1
+LEFT JOIN CTE c2 
+ON DATEDIFF(c1.visited_on,c2.visited_on) BETWEEN 0 AND 6
+GROUP BY c1.visited_on
+HAVING count(*)=7
+ORDER BY visited_on;
