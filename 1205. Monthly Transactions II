@@ -1,0 +1,40 @@
+WITH CTE AS 
+(
+    SELECT
+    LEFT(t.trans_date,7) as month,
+    t.country,
+    COUNT(*) as approved_count,
+    SUM(amount) as approved_amount
+    FROM Transactions t
+    WHERE t.state ="approved"
+GROUP BY LEFT(t.trans_date,7),t.country
+), b AS
+(
+    SELECT
+        LEFT(c.trans_date,7) as month,
+        t.country,
+        COUNT(c.trans_id) as chargeback_count,
+    SUM(t.amount) as chargeback_amount
+    FROM Transactions t 
+    INNER JOIN 
+    Chargebacks c
+    ON t.id=c.trans_id
+    GROUP BY LEFT(c.trans_date,7),t.country
+)
+
+SELECT 
+    cte.*,
+    IFNULL(b.chargeback_count,0) as chargeback_count,
+    IFNULL(b.chargeback_amount,0) as chargeback_amount
+FROM cte 
+LEFT JOIN b 
+ON cte.month=b.month and cte.country=b.country
+UNION ALL
+SELECT month ,
+country,
+0 as approved_count,
+0 as approved_amount,
+chargeback_count,
+chargeback_amount
+FROM b where (month,country) not IN ( SELECT month,country from CTE)
+;
