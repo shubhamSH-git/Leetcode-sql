@@ -1,0 +1,20 @@
+WITH CTE AS 
+( 
+    SELECT 
+        user2_id
+    FROM Friendship
+    WHERE user1_id =1
+    UNION 
+    SELECT 
+        user1_id
+    FROM Friendship
+    WHERE user2_id=1
+)
+
+SELECT 
+    DISTINCT l1.page_id as recommended_page
+FROM CTE c1 
+INNER JOIN Likes l1
+ON c1.user2_id=l1.user_id 
+WHERE l1.page_id not in (SELECT page_id FROM Likes WHERE user_id=1)
+ORDER BY recommended_page;
