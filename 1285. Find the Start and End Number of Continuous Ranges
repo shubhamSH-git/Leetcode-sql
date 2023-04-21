@@ -1,3 +1,17 @@
+# window function
+
+SELECT 
+  MIN(x.log_id) as start_id,
+  MAX(x.log_id) as end_id
+FROM
+(SELECT 
+  l.log_id,
+  (l.log_id-row_number() OVER(ORDER BY l.log_id)) as n
+FROM Logs l) x
+GROUP BY x.n;
+
+
+
 #Using recursion :
 
 ITH RECURSIVE cte as  (
