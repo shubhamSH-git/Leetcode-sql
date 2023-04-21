@@ -1,0 +1,51 @@
+#Using recursion :
+
+ITH RECURSIVE cte as  (
+    select 
+    (select max(log_id)+1 FROM Logs) as N
+    UNION ALL 
+    select N-1 FROM CTE WHERE N>0
+)
+
+SELECT 
+    start_id,
+    end_id
+FROM
+(
+    select 
+        N+1 as start_id,
+        LEAD(N,1,0) OVER(ORDER BY N) -1 as end_id
+    from cte c
+    LEFT JOIN Logs l
+    ON c.n=l.log_id
+    WHERE log_id is NULL
+    ORDER BY N
+    ) y 
+ INNER JOIN Logs z
+ ON y.start_id=z.log_id
+ ORDER BY y.start_id ;
+ 
+ # Using joins
+ 
+ WITH CTE AS
+(
+SELECT 
+    log_id, 
+    row_number() OVER(ORDER BY log_id) as r 
+FROM Logs l1
+) 
+
+SELECT 
+    min(x.start_id) as start_id,
+    end_id
+FROM
+(
+SELECT 
+    c1.log_id as start_id,
+    max(c2.log_id) as end_id
+FROM CTE c1
+LEFT JOIN CTE c2 
+ON c2.log_id - c1.log_id=CAST(c2.r as signed)-CAST(c1.r as signed)
+GROUP BY c1.log_id) x
+GROUP BY x.end_id
+;
