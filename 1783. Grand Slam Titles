@@ -1,0 +1,47 @@
+# Using Inner Join
+
+SELECT 
+    p.player_id,
+    p.player_name,
+    SUM(p.player_id= c.wimbledon)+SUM(p.player_id=c.fr_open)+SUM(p.player_id=c.us_open)+SUM(p.player_id=c.au_open) as grand_slams_count
+FROM Players p
+INNER JOIN Championships c
+ON p.player_id IN (c.wimbledon,c.fr_open,c.us_open,c.au_open)
+GROUP BY p.player_id
+;
+
+
+# Using Union 
+WITH CTE AS 
+(
+    SELECT 
+        Wimbledon as chmp
+    FROM Championships
+    UNION ALL 
+    SELECT 
+        Fr_open as chmp
+    FROM Championships
+    UNION ALL 
+    SELECT 
+        US_open as chmp 
+    FROM Championships 
+    UNION ALL 
+    SELECT 
+        Au_open as chmp 
+    FROM Championships
+)
+
+SELECT 
+    p.*,
+    x.grand_slams_count
+FROM Players p 
+INNER JOIN 
+(
+SELECT 
+    c.chmp, 
+    count(*) as grand_slams_count
+FROM CTE c 
+GROUP BY c.chmp
+) x
+ON p.player_id=x.chmp
+;
