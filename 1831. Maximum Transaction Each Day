@@ -1,0 +1,30 @@
+#using subquery
+
+SELECT 
+    t1.transaction_id
+FROM Transactions t1
+WHERE (DATE(t1.day),t1.amount)
+IN 
+(
+SELECT 
+    DATE(t.day) as dt, 
+    MAX(amount) as amt
+FROM Transactions t 
+GROUP BY DATE(t.day)
+) 
+ORDER BY 1
+;
+
+# using window function
+SELECT 
+    transaction_id
+FROM 
+(
+SELECT  
+    t.transaction_id,
+    rank() OVER(PARTITION BY DATE(day) ORDER BY amount DESC ) as r 
+FROM Transactions t
+) x
+WHERE x.r=1
+ORDER BY transaction_id
+;
