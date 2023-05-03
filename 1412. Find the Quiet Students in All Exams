@@ -1,0 +1,28 @@
+WITH CTE AS (
+    SELECT
+    student_id 
+    FROM Exam e1 
+    WHERE (e1.exam_id,e1.score) IN
+    (
+    SELECT
+        exam_id, 
+        MAX(score) as m
+    FROM Exam
+    GROUP BY exam_id 
+    UNION 
+    SELECT
+        exam_id, 
+        MIN(score) as m
+    FROM Exam
+    GROUP BY exam_id 
+    )
+)
+
+SELECT 
+    DISTINCT st.student_id, 
+    st.student_name
+FROM Exam ex
+INNER JOIN Student st
+ON ex.student_id=st.student_id 
+WHERE ex.student_id NOT IN (SELECT * FROM CTE ) 
+ORDER BY 1;
