@@ -1,0 +1,33 @@
+WITH CTE AS 
+(
+SELECT 
+success_date as dt, 
+"succeeded" as period_state
+FROM Succeeded
+WHERE YEAR(success_date)=2019
+UNION ALL 
+SELECT 
+fail_date as dt, 
+"failed" as period_state
+FROM Failed 
+WHERE YEAR(fail_date)=2019
+ORDER BY dt
+)
+
+SELECT 
+  x.period_state, 
+  min(dt) as start_date,
+  max(dt) as end_date
+FROM 
+(
+SELECT 
+    *, 
+    row_number() OVER (ORDER BY dt) as r,
+    row_number() OVER (PARTITION BY period_state ORDER BY dt) as r1
+FROM CTE 
+)
+x
+GROUP BY (x.r-x.r1),x.period_state
+ORDER BY start_date
+;
+
